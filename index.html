@@ -11,24 +11,87 @@
             background: black;
             color: #ff69b4;
             font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
+            /* Scroll allow karega agar content bada ho jaye */
+            overflow-x: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
-        #matrix { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        #matrix { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: -1; 
+        }
+
         #start-btn {
-            padding: 15px 30px; font-size: 20px; background: #ff69b4; color: black;
-            border: none; border-radius: 50px; cursor: pointer; font-weight: bold;
-            box-shadow: 0 0 20px #ff69b4; z-index: 10; transition: 0.3s;
+            padding: 20px 40px; 
+            font-size: 24px; 
+            background: #ff69b4; 
+            color: black;
+            border: none; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: bold;
+            box-shadow: 0 0 25px #ff69b4; 
+            z-index: 10;
         }
-        #start-btn:hover { transform: scale(1.1); }
-        #display-text { display: none; font-size: 100px; font-weight: bold; text-align: center; text-shadow: 0 0 20px #ff69b4; }
-        #message { display: none; text-align: center; animation: fadeIn 2s; }
-        .main-photo { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #ff69b4; object-fit: cover; box-shadow: 0 0 20px #ff69b4; margin-bottom: 20px; }
-        h1 { font-size: 45px; margin: 10px 0; text-shadow: 0 0 15px #ff69b4; }
-        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+        #display-text { 
+            display: none; 
+            font-size: 80px; /* Bada font size */
+            font-weight: bold; 
+            text-align: center; 
+            text-shadow: 0 0 25px #ff69b4; 
+        }
+
+        #message { 
+            display: none; 
+            text-align: center; 
+            padding: 40px 20px;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        .main-photo { 
+            width: 250px; /* Photo ka size bada kar diya */
+            height: 250px; 
+            border-radius: 50%; 
+            border: 6px solid #ff69b4; 
+            object-fit: cover; 
+            box-shadow: 0 0 30px #ff69b4; 
+            margin-bottom: 25px; 
+        }
+
+        h1 { 
+            font-size: 60px; /* Bada heading */
+            margin: 10px 0; 
+            text-shadow: 0 0 20px #ff69b4; 
+            letter-spacing: 2px;
+        }
+
+        h2 { 
+            font-size: 40px; 
+            margin: 5px 0; 
+            color: white;
+        }
+
+        p {
+            font-size: 22px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Mobile ke liye thoda adjust */
+        @media (max-width: 600px) {
+            #display-text { font-size: 50px; }
+            h1 { font-size: 40px; }
+            h2 { font-size: 30px; }
+            .main-photo { width: 200px; height: 200px; }
+        }
+
+        @keyframes fadeIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
     </style>
 </head>
 <body>
@@ -40,8 +103,8 @@
     <div id="message">
         <img src="https://i.ibb.co/LDGWyXpw/1507288482f1020c18a53adfd690bcd9.jpg" class="main-photo" alt="Aditya">
         <h1>HAPPY BIRTHDAY</h1>
-        <h2 style="font-size: 35px;">ADITYA BHAI</h2>
-        <p>Aap jiyo hazaaron saal!</p>
+        <h2>ADITYA BHAI</h2>
+        <p>✨ Aap jiyo hazaaron saal! ✨</p>
     </div>
 
     <audio id="bday-song" loop>
@@ -49,17 +112,23 @@
     </audio>
 
     <script>
-        // Matrix Effect
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const letters = "ADITYA101010";
-        const fontSize = 16;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.onresize = resize;
+        resize();
+
+        const letters = "HAPPY Birthday";
+        const fontSize = 15;
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(1);
 
         function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ff69b4";
             ctx.font = fontSize + "px arial";
@@ -70,39 +139,42 @@
                 drops[i]++;
             });
         }
-        setInterval(drawMatrix, 33);
+        setInterval(drawMatrix, 35);
 
-        // Sequence Logic
-        const sequence = ["3", "2", "1", "HAPPY", "BIRTHDAY", "ADITYA", "BHAI!"];
-        const displayEl = document.getElementById('display-text');
-        const messageEl = document.getElementById('message');
-        const startBtn = document.getElementById('start-btn');
-        const song = document.getElementById('bday-song');
+        const sequence = ["3", "2", "1", "HAPPY", "BIRTHDAY","To","You", "ADITYA", "BHAI!", "❤️"];
         let step = 0;
 
         function initiate() {
-            startBtn.style.display = 'none';
+            document.getElementById('start-btn').style.display = 'none';
+            const displayEl = document.getElementById('display-text');
             displayEl.style.display = 'block';
-            song.play().catch(e => console.log("Music play error: ", e));
-            runSequence();
-        }
+            document.getElementById('bday-song').play();
+            
+            const timer = setInterval(() => {
+                if (step < sequence.length) {
+                    displayEl.innerText = sequence[step];
+                    step++;
+                } else {
+                    clearInterval(timer);
+                    displayEl.style.display = 'none';
+                    document.getElementById('message').style.display = 'block';
+                    
+                    // Extra Blast Effect
+                    var duration = 5 * 1000;
+                    var animationEnd = Date.now() + duration;
+                    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-        function runSequence() {
-            if (step < sequence.length) {
-                displayEl.innerText = sequence[step];
-                step++;
-                setTimeout(runSequence, 1000);
-            } else {
-                displayEl.style.display = 'none';
-                messageEl.style.display = 'block';
-                // Pataake/Confetti effect
-                confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#ff69b4', '#ffffff', '#ffd700']
-                });
-            }
+                    function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+                    var interval = setInterval(function() {
+                        var timeLeft = animationEnd - Date.now();
+                        if (timeLeft <= 0) return clearInterval(interval);
+                        var particleCount = 50 * (timeLeft / duration);
+                        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                    }, 250);
+                }
+            }, 1000);
         }
     </script>
 </body>
