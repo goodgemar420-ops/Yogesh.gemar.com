@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Aditya Bhai!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            color: #ff69b4;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #matrix { position: fixed; top: 0; left: 0; z-index: -1; }
+        #start-btn {
+            padding: 15px 30px; font-size: 20px; background: #ff69b4; color: black;
+            border: none; border-radius: 50px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 0 20px #ff69b4; z-index: 10; transition: 0.3s;
+        }
+        #start-btn:hover { transform: scale(1.1); }
+        #display-text { display: none; font-size: 100px; font-weight: bold; text-align: center; text-shadow: 0 0 20px #ff69b4; }
+        #message { display: none; text-align: center; animation: fadeIn 2s; }
+        .main-photo { width: 180px; height: 180px; border-radius: 50%; border: 4px solid #ff69b4; object-fit: cover; box-shadow: 0 0 20px #ff69b4; margin-bottom: 20px; }
+        h1 { font-size: 45px; margin: 10px 0; text-shadow: 0 0 15px #ff69b4; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+    <button id="start-btn" onclick="initiate()">Bhai Ke Liye Surprise 🎁</button>
+    <div id="display-text"></div>
+
+    <div id="message">
+        <img src="https://i.ibb.co/LDGWyXpw/1507288482f1020c18a53adfd690bcd9.jpg" class="main-photo" alt="Aditya">
+        <h1>HAPPY BIRTHDAY</h1>
+        <h2 style="font-size: 35px;">ADITYA BHAI</h2>
+        <p>Aap jiyo hazaaron saal!</p>
+    </div>
+
+    <audio id="bday-song" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Matrix Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const letters = "ADITYA101010";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ff69b4";
+            ctx.font = fontSize + "px arial";
+            drops.forEach((y, i) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 33);
+
+        // Sequence Logic
+        const sequence = ["3", "2", "1", "HAPPY", "BIRTHDAY", "ADITYA", "BHAI!"];
+        const displayEl = document.getElementById('display-text');
+        const messageEl = document.getElementById('message');
+        const startBtn = document.getElementById('start-btn');
+        const song = document.getElementById('bday-song');
+        let step = 0;
+
+        function initiate() {
+            startBtn.style.display = 'none';
+            displayEl.style.display = 'block';
+            song.play().catch(e => console.log("Music play error: ", e));
+            runSequence();
+        }
+
+        function runSequence() {
+            if (step < sequence.length) {
+                displayEl.innerText = sequence[step];
+                step++;
+                setTimeout(runSequence, 1000);
+            } else {
+                displayEl.style.display = 'none';
+                messageEl.style.display = 'block';
+                // Pataake/Confetti effect
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff69b4', '#ffffff', '#ffd700']
+                });
+            }
+        }
+    </script>
+</body>
+</html>
